@@ -14,6 +14,9 @@ public class AbsMutator implements Mutator<AbsRepresentation> {
 
     @Override
     public AbsRepresentation mutate(AbsRepresentation individual) {
+        if (random.nextDouble() < 0.05) {
+            return individual;
+        }
         return new AbsRepresentation(PermutationMutationUtils
                 .twoPositionsChangeRandom(individual.getPermutation(), random));
     }

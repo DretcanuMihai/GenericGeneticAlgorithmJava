@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 public class ElitismReplacer implements Replacer {
 
     @Override
-    public <R extends Representation> List<Candidate<R>> replace(List<Candidate<R>> currentPopulation,
+    public <R extends Representation> List<Candidate<R>> replace(List<Candidate<R>> current,
                                                                  List<Candidate<R>> offsprings) {
-        List<Candidate<R>> result = currentPopulation.stream()
-                .limit(currentPopulation.size() - offsprings.size())
+        List<Candidate<R>> result = current.stream()
+                .limit(current.size() - offsprings.size())
                 .collect(Collectors.toList());
         result.addAll(offsprings);
         return result;
