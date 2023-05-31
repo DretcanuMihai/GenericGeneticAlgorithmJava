@@ -12,7 +12,7 @@ public class FitnessStopCriterion implements StopCriterion {
     }
 
     @Override
-    public boolean evaluate(GeneticAlgorithm<?> geneticAlgorithm) {
+    public boolean mustStop(GeneticAlgorithm<?> geneticAlgorithm) {
         double bestFitness = geneticAlgorithm.getPopulation().get(0).getFitness();
         return geneticAlgorithm.getProblemType().getFitnessComparator().compare(bestFitness, limit) >= 0;
     }

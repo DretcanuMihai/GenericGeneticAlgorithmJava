@@ -11,7 +11,7 @@ public class GenerationStopCriterion implements StopCriterion {
     }
 
     @Override
-    public boolean evaluate(GeneticAlgorithm<?> geneticAlgorithm) {
+    public boolean mustStop(GeneticAlgorithm<?> geneticAlgorithm) {
         return geneticAlgorithm.getNrGenerations() >= maxGeneration;
     }
 }

@@ -12,7 +12,7 @@ public class TimedStopCriterion implements StopCriterion {
     }
 
     @Override
-    public boolean evaluate(GeneticAlgorithm<?> geneticAlgorithm) {
+    public boolean mustStop(GeneticAlgorithm<?> geneticAlgorithm) {
         return geneticAlgorithm.getElapsedTime() >= timeLimitInMillis;
     }
 }

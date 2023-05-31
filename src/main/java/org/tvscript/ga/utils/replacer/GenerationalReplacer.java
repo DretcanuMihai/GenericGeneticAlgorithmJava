@@ -10,8 +10,8 @@ public class GenerationalReplacer implements Replacer {
 
 
     @Override
-    public <R extends Representation> List<Candidate<R>> replace(List<Candidate<R>> current,
-                                                                 List<Candidate<R>> offsprings) {
-        return offsprings;
+    public <R extends Representation> List<Candidate<R>> replace(List<Candidate<R>> currentCandidates,
+                                                                 List<Candidate<R>> offspringCandidates) {
+        return offspringCandidates;
     }
 }

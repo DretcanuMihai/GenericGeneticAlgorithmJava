@@ -78,7 +78,7 @@ public class GeneticAlgorithm<R extends Representation> {
 
     public void run() {
         generateInitialPopulation();
-        while (!stopCriterion.evaluate(this)) {
+        while (!stopCriterion.mustStop(this)) {
             advanceToNextGeneration();
         }
     }
@@ -91,33 +91,33 @@ public class GeneticAlgorithm<R extends Representation> {
         for (int i = 0; i < populationSize; i++) {
             initialRepresentations.add(generator.generate());
         }
-        population = evaluateAndSortCandidates(initialRepresentations);
+        population = evaluateAndRankIndividuals(initialRepresentations);
     }
 
     public void advanceToNextGeneration() {
-        List<R> generationOffsprings = new ArrayList<>();
+        List<R> currentOffsprings = new ArrayList<>();
         for (int i = 0; i < reproductionsPerGeneration; i++) {
-            List<R> candidates = selector.select(population).stream()
+            List<R> selectedIndividuals = selector.select(population).stream()
                     .map(Candidate::getRepresentation)
                     .collect(Collectors.toList());
-            List<R> offsprings = crossoverOperator.cross(candidates)
+            List<R> offsprings = crossoverOperator.cross(selectedIndividuals)
                     .stream()
                     .map(mutator::mutate).toList();
-            generationOffsprings.addAll(offsprings);
+            currentOffsprings.addAll(offsprings);
         }
-        List<Candidate<R>> evaluatedOffsprings = evaluateAndSortCandidates(generationOffsprings);
-        population = replacer.replace(population, evaluatedOffsprings);
+        List<Candidate<R>> offspringCandidates = evaluateAndRankIndividuals(currentOffsprings);
+        population = replacer.replace(population, offspringCandidates);
         population.sort(problemType.getCandidateComparator().reversed());
     }
 
-    private List<Candidate<R>> evaluateAndSortCandidates(List<R> candidatesRepresentations) {
-        return candidatesRepresentations.stream().map(this::evaluateCandidate)
+    private List<Candidate<R>> evaluateAndRankIndividuals(List<R> individuals) {
+        return individuals.stream().map(this::evaluateIndividual)
                 .sorted(problemType.getCandidateComparator().reversed())
                 .collect(Collectors.toList());
     }
 
-    private Candidate<R> evaluateCandidate(R candidateRepresentation) {
-        double fitness = evaluator.evaluate(candidateRepresentation);
-        return new Candidate<>(fitness, candidateRepresentation);
+    private Candidate<R> evaluateIndividual(R individual) {
+        double fitness = evaluator.evaluate(individual);
+        return new Candidate<>(fitness, individual);
     }
 }

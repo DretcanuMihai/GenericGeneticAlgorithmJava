@@ -4,5 +4,5 @@ import org.tvscript.ga.GeneticAlgorithm;
 
 public interface StopCriterion {
 
-    boolean evaluate(GeneticAlgorithm<?> geneticAlgorithm);
+    boolean mustStop(GeneticAlgorithm<?> geneticAlgorithm);
 }
