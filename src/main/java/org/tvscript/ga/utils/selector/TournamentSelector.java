@@ -1,6 +1,5 @@
 package org.tvscript.ga.utils.selector;
 
-import org.tvscript.ga.ProblemType;
 import org.tvscript.ga.general.Candidate;
 import org.tvscript.ga.general.Selector;
 import org.tvscript.ga.general.Representation;
@@ -30,9 +29,7 @@ public class TournamentSelector implements Selector {
     }
 
     @Override
-    public <R extends Representation> List<Candidate<R>> select(List<Candidate<R>> population, ProblemType problemType) {
-        List<Candidate<R>> sortedPopulation = population.stream().sorted(problemType.getCandidateComparator()).toList();
-
+    public <R extends Representation> List<Candidate<R>> select(List<Candidate<R>> population) {
         Set<Integer> selectedIndices = new HashSet<>();
         for (int i = 0; i < amountToSelect; i++) {
             Set<Integer> tournamentIndices = new HashSet<>();
@@ -53,6 +50,6 @@ public class TournamentSelector implements Selector {
             selectedIndices.add(tournamentIndices.stream().sorted().toList().get(winnerIndex));
         }
 
-        return selectedIndices.stream().map(sortedPopulation::get).toList();
+        return selectedIndices.stream().map(population::get).toList();
     }
 }

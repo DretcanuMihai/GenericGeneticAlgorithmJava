@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A class encapsulating a genetic algorithm behaviour.
+ * A "population" is a List<Candidate> and it is always sorted such that the best solution are at the lower indices.
+ * Cases such as this are the getPopulation() method and the methods of the objects of class Selector and Replacer
+ */
 public class GeneticAlgorithm<R extends Representation> {
 
     private int nrGenerations;
@@ -92,7 +97,7 @@ public class GeneticAlgorithm<R extends Representation> {
     public void advanceToNextGeneration() {
         List<R> generationOffsprings = new ArrayList<>();
         for (int i = 0; i < reproductionsPerGeneration; i++) {
-            List<R> candidates = selector.select(population, problemType).stream()
+            List<R> candidates = selector.select(population).stream()
                     .map(Candidate::getRepresentation)
                     .collect(Collectors.toList());
             List<R> offsprings = crossoverOperator.cross(candidates)
@@ -101,7 +106,7 @@ public class GeneticAlgorithm<R extends Representation> {
             generationOffsprings.addAll(offsprings);
         }
         List<Candidate<R>> evaluatedOffsprings = evaluateAndSortCandidates(generationOffsprings);
-        population = replacer.replace(population, evaluatedOffsprings, problemType);
+        population = replacer.replace(population, evaluatedOffsprings);
         population.sort(problemType.getCandidateComparator().reversed());
     }
 
