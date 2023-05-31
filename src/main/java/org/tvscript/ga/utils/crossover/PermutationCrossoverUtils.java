@@ -1,4 +1,4 @@
-package org.tvscript.ga.utils.crossoveroperators;
+package org.tvscript.ga.utils.crossover;
 
 import java.util.HashSet;
 import java.util.Random;

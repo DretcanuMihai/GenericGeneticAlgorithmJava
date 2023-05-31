@@ -1,11 +1,11 @@
 package org.tvscript.sample.absminmaxer;
 
-import org.tvscript.ga.operators.Mutator;
-import org.tvscript.ga.utils.mutators.PermutationMutationUtils;
+import org.tvscript.ga.general.Mutator;
+import org.tvscript.ga.utils.mutator.PermutationMutationUtils;
 
 import java.util.Random;
 
-public class AbsMutator implements Mutator<AbsCandidate> {
+public class AbsMutator implements Mutator<AbsRepresentation> {
     Random random;
 
     public AbsMutator(Random random) {
@@ -13,7 +13,8 @@ public class AbsMutator implements Mutator<AbsCandidate> {
     }
 
     @Override
-    public void mutate(AbsCandidate candidate) {
-        PermutationMutationUtils.twoPositionsChangeRandom(candidate.getPermutation(), random);
+    public AbsRepresentation mutate(AbsRepresentation individual) {
+        return new AbsRepresentation(PermutationMutationUtils
+                .twoPositionsChangeRandom(individual.getPermutation(), random));
     }
 }

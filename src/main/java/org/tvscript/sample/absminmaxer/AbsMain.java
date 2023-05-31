@@ -2,9 +2,8 @@ package org.tvscript.sample.absminmaxer;
 
 import org.tvscript.ga.GeneticAlgorithm;
 import org.tvscript.ga.ProblemType;
-import org.tvscript.ga.utils.SimpleConsoleRunner;
-import org.tvscript.ga.utils.replacers.ElitismReplacer;
-import org.tvscript.ga.utils.selectors.TournamentSelector;
+import org.tvscript.ga.utils.replacer.ElitismReplacer;
+import org.tvscript.ga.utils.selector.TournamentSelector;
 
 import java.util.Random;
 
@@ -17,7 +16,7 @@ public class AbsMain {
             values[i] = i * 10;
         }
         Random random = new Random(5);
-        GeneticAlgorithm<AbsCandidate> geneticAlgorithm = new GeneticAlgorithm<>(
+        GeneticAlgorithm<AbsRepresentation> geneticAlgorithm = new GeneticAlgorithm<>(
                 ProblemType.MINIMIZER,
                 n,
                 n / 4,
@@ -25,12 +24,12 @@ public class AbsMain {
                 new AbsEvaluator(values),
                 null,
                 //new GenerationStopCriterion<>(maxGen),
-                new TournamentSelector<>(2, n / 2, ProblemType.MINIMIZER, random),
+                new TournamentSelector(2, n / 2, random),
                 new AbsCrossoverOperator(random),
                 new AbsMutator(random),
-                new ElitismReplacer<>(ProblemType.MINIMIZER)
+                new ElitismReplacer()
         );
-        SimpleConsoleRunner<AbsCandidate> runner = new SimpleConsoleRunner<>(geneticAlgorithm);
+        SimpleConsoleRunner<AbsRepresentation> runner = new SimpleConsoleRunner<>(geneticAlgorithm);
         runner.run();
     }
 }

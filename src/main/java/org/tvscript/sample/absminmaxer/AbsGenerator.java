@@ -1,11 +1,11 @@
 package org.tvscript.sample.absminmaxer;
 
-import org.tvscript.ga.population.Generator;
-import org.tvscript.ga.utils.generators.PermutationGeneratorUtils;
+import org.tvscript.ga.general.Generator;
+import org.tvscript.ga.utils.generator.PermutationGeneratorUtils;
 
 import java.util.Random;
 
-public class AbsGenerator implements Generator<AbsCandidate> {
+public class AbsGenerator implements Generator<AbsRepresentation> {
     int n;
     Random random;
 
@@ -15,7 +15,7 @@ public class AbsGenerator implements Generator<AbsCandidate> {
     }
 
     @Override
-    public AbsCandidate generate() {
-        return new AbsCandidate(PermutationGeneratorUtils.generatePermutation(n,random));
+    public AbsRepresentation generate() {
+        return new AbsRepresentation(PermutationGeneratorUtils.generatePermutation(n,random));
     }
 }

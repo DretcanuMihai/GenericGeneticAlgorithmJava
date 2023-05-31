@@ -1,6 +1,6 @@
 package org.tvscript.ga;
 
-import org.tvscript.ga.population.Candidate;
+import org.tvscript.ga.general.Candidate;
 
 import java.util.Comparator;
 
@@ -8,7 +8,7 @@ public enum ProblemType {
     MINIMIZER(((Comparator<Double>) Double::compare).reversed()),
     MAXIMIZER(Double::compareTo);
 
-    private final Comparator<Candidate> candidateComparator;
+    private final Comparator<Candidate<?>> candidateComparator;
     private final Comparator<Double> fitnessComparator;
 
     ProblemType(Comparator<Double> fitnessComparator) {
@@ -20,7 +20,7 @@ public enum ProblemType {
         return fitnessComparator;
     }
 
-    public Comparator<Candidate> getCandidateComparator() {
+    public Comparator<Candidate<?>> getCandidateComparator() {
         return candidateComparator;
     }
 }

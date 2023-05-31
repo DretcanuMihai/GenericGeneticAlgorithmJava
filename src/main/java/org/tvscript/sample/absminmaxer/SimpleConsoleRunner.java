@@ -1,12 +1,12 @@
-package org.tvscript.ga.utils;
+package org.tvscript.sample.absminmaxer;
 
 import org.tvscript.ga.GeneticAlgorithm;
-import org.tvscript.ga.population.Candidate;
+import org.tvscript.ga.general.Representation;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class SimpleConsoleRunner<C extends Candidate> {
+public class SimpleConsoleRunner<C extends Representation> {
     GeneticAlgorithm<C> geneticAlgorithm;
 
     public SimpleConsoleRunner(GeneticAlgorithm<C> geneticAlgorithm) {

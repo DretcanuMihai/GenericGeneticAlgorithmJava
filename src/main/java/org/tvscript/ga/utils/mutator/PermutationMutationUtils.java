@@ -1,9 +1,9 @@
-package org.tvscript.ga.utils.mutators;
+package org.tvscript.ga.utils.mutator;
 
 import java.util.Random;
 
 public class PermutationMutationUtils {
-    public static void twoPositionsChangeRandom(int[] permutation, Random random) {
+    public static int[] twoPositionsChangeRandom(int[] permutation, Random random) {
         int n, i, j;
         n = permutation.length;
         i = random.nextInt(n);
@@ -14,5 +14,6 @@ public class PermutationMutationUtils {
         int aux = permutation[i];
         permutation[i] = permutation[j];
         permutation[j] = aux;
+        return permutation;
     }
 }

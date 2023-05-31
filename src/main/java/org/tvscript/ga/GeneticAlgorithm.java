@@ -1,45 +1,44 @@
 package org.tvscript.ga;
 
-import org.tvscript.ga.operators.CrossoverOperator;
-import org.tvscript.ga.operators.Evaluator;
-import org.tvscript.ga.operators.Mutator;
-import org.tvscript.ga.operators.Selector;
-import org.tvscript.ga.population.Candidate;
-import org.tvscript.ga.population.Generator;
-import org.tvscript.ga.population.Replacer;
-import org.tvscript.ga.population.StopCriterion;
+import org.tvscript.ga.general.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class GeneticAlgorithm<C extends Candidate> {
+public class GeneticAlgorithm<R extends Representation> {
+
+    private int nrGenerations;
+
+    private long startTime;
 
     private final ProblemType problemType;
 
-    private List<C> population;
+    private List<Candidate<R>> population;
 
     private final int populationSize;
 
     private final int reproductionsPerGeneration;
 
-    private final Generator<C> generator;
+    private final Generator<R> generator;
 
-    private final Evaluator<C> evaluator;
+    private final Evaluator<R> evaluator;
 
-    private final StopCriterion<C> stopCriterion;
+    private final StopCriterion stopCriterion;
 
-    private final Selector<C> selector;
+    private final Selector selector;
 
-    private final CrossoverOperator<C> crossoverOperator;
+    private final CrossoverOperator<R> crossoverOperator;
 
-    private final Mutator<C> mutator;
+    private final Mutator<R> mutator;
 
-    private final Replacer<C> replacer;
+    private final Replacer replacer;
 
-    public GeneticAlgorithm(ProblemType problemType, int populationSize, int reproductionsPerGeneration, Generator<C> generator,
-                            Evaluator<C> evaluator, StopCriterion<C> stopCriterion, Selector<C> selector,
-                            CrossoverOperator<C> crossoverOperator, Mutator<C> mutator,
-                            Replacer<C> replacer) {
+    public GeneticAlgorithm(ProblemType problemType, int populationSize, int reproductionsPerGeneration,
+                            Generator<R> generator, Evaluator<R> evaluator, StopCriterion stopCriterion,
+                            Selector selector, CrossoverOperator<R> crossoverOperator, Mutator<R> mutator,
+                            Replacer replacer) {
+
         this.problemType = problemType;
         this.populationSize = populationSize;
         this.reproductionsPerGeneration = reproductionsPerGeneration;
@@ -52,42 +51,68 @@ public class GeneticAlgorithm<C extends Candidate> {
         this.replacer = replacer;
     }
 
+    public List<Candidate<R>> getPopulation() {
+        return population;
+    }
+
+    public int getNrGenerations() {
+        return nrGenerations;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getElapsedTime() {
+        return System.currentTimeMillis() - startTime;
+    }
+
+    public ProblemType getProblemType() {
+        return problemType;
+    }
+
     public void run() {
         generateInitialPopulation();
-        while (!stopCriterion.evaluate(population)) {
+        while (!stopCriterion.evaluate(this)) {
             advanceToNextGeneration();
         }
     }
 
-    public List<C> getPopulation() {
-        return population;
-    }
 
     public void generateInitialPopulation() {
-        population = generator.generate(populationSize);
-        evaluateAndSortCandidates(population);
+        nrGenerations = 0;
+        startTime = System.currentTimeMillis();
+        List<R> initialRepresentations = new ArrayList<>();
+        for (int i = 0; i < populationSize; i++) {
+            initialRepresentations.add(generator.generate());
+        }
+        population = evaluateAndSortCandidates(initialRepresentations);
     }
 
     public void advanceToNextGeneration() {
-        List<C> generationOffsprings = new ArrayList<>();
+        List<R> generationOffsprings = new ArrayList<>();
         for (int i = 0; i < reproductionsPerGeneration; i++) {
-            List<C> candidates = selector.select(population);
-            List<C> offsprings = crossoverOperator.cross(candidates);
-            offsprings.forEach(mutator::mutate);
+            List<R> candidates = selector.select(population, problemType).stream()
+                    .map(Candidate::getRepresentation)
+                    .collect(Collectors.toList());
+            List<R> offsprings = crossoverOperator.cross(candidates)
+                    .stream()
+                    .map(mutator::mutate).toList();
             generationOffsprings.addAll(offsprings);
         }
-        evaluateAndSortCandidates(generationOffsprings);
-        population = replacer.replace(population, generationOffsprings);
+        List<Candidate<R>> evaluatedOffsprings = evaluateAndSortCandidates(generationOffsprings);
+        population = replacer.replace(population, evaluatedOffsprings, problemType);
         population.sort(problemType.getCandidateComparator().reversed());
     }
 
-    private void evaluateAndSortCandidates(List<C> candidates){
-        candidates.forEach(this::setCandidateFitness);
-        candidates.sort(problemType.getCandidateComparator().reversed());
+    private List<Candidate<R>> evaluateAndSortCandidates(List<R> candidatesRepresentations) {
+        return candidatesRepresentations.stream().map(this::evaluateCandidate)
+                .sorted(problemType.getCandidateComparator().reversed())
+                .collect(Collectors.toList());
     }
 
-    private void setCandidateFitness(C candidate) {
-        double fitness = evaluator.evaluate(candidate);
-        candidate.setFitness(fitness);
+    private Candidate<R> evaluateCandidate(R candidateRepresentation) {
+        double fitness = evaluator.evaluate(candidateRepresentation);
+        return new Candidate<>(fitness, candidateRepresentation);
     }
 }

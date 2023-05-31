@@ -1,12 +1,13 @@
-package org.tvscript.ga.utils.selectors;
+package org.tvscript.ga.utils.selector;
 
 import org.tvscript.ga.ProblemType;
-import org.tvscript.ga.operators.Selector;
-import org.tvscript.ga.population.Candidate;
+import org.tvscript.ga.general.Candidate;
+import org.tvscript.ga.general.Selector;
+import org.tvscript.ga.general.Representation;
 
 import java.util.*;
 
-public class TournamentSelector<C extends Candidate> implements Selector<C> {
+public class TournamentSelector implements Selector {
 
     private final int amountToSelect;
 
@@ -14,26 +15,23 @@ public class TournamentSelector<C extends Candidate> implements Selector<C> {
 
     private final double probability;
 
-    private final ProblemType problemType;
-
     private final Random random;
 
 
-    public TournamentSelector(int amountToSelect, int tournamentSize, double probability, ProblemType problemType, Random random) {
+    public TournamentSelector(int amountToSelect, int tournamentSize, double probability, Random random) {
         this.random = random;
-        this.problemType = problemType;
         this.amountToSelect = amountToSelect;
         this.tournamentSize = tournamentSize;
         this.probability = probability;
     }
 
-    public TournamentSelector(int amountToSelect, int tournamentSize, ProblemType problemType, Random random) {
-        this(amountToSelect, tournamentSize, 1, problemType, random);
+    public TournamentSelector(int amountToSelect, int tournamentSize, Random random) {
+        this(amountToSelect, tournamentSize, 1, random);
     }
 
     @Override
-    public List<C> select(List<C> population) {
-        List<C> sortedPopulation = population.stream().sorted(problemType.getCandidateComparator()).toList();
+    public <R extends Representation> List<Candidate<R>> select(List<Candidate<R>> population, ProblemType problemType) {
+        List<Candidate<R>> sortedPopulation = population.stream().sorted(problemType.getCandidateComparator()).toList();
 
         Set<Integer> selectedIndices = new HashSet<>();
         for (int i = 0; i < amountToSelect; i++) {

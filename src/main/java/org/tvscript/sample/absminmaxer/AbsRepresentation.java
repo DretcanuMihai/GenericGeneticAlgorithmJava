@@ -1,14 +1,13 @@
 package org.tvscript.sample.absminmaxer;
 
-import org.tvscript.ga.population.Candidate;
+import org.tvscript.ga.general.Representation;
 
 import java.util.Arrays;
 
-public class AbsCandidate implements Candidate {
-    double fitness;
+public class AbsRepresentation implements Representation {
     int[] permutation;
 
-    public AbsCandidate(int[] permutation) {
+    public AbsRepresentation(int[] permutation) {
         this.permutation = permutation;
     }
 
@@ -17,19 +16,8 @@ public class AbsCandidate implements Candidate {
     }
 
     @Override
-    public double getFitness() {
-        return fitness;
-    }
-
-    @Override
-    public void setFitness(double fitness) {
-        this.fitness = fitness;
-    }
-
-    @Override
     public String toString() {
         return "AbsCandidate{" +
-                "fitness=" + fitness +
                 ", permutation=" + Arrays.toString(permutation) +
                 '}';
     }

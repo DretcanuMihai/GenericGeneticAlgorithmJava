@@ -1,4 +1,4 @@
-package org.tvscript.ga.utils.generators;
+package org.tvscript.ga.utils.generator;
 
 import java.util.*;
 
