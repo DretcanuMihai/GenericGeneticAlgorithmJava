@@ -108,6 +108,7 @@ public class GeneticAlgorithm<R extends Representation> {
         List<Candidate<R>> offspringCandidates = evaluateAndRankIndividuals(currentOffsprings);
         population = replacer.replace(population, offspringCandidates);
         population.sort(problemType.getCandidateComparator().reversed());
+        nrGenerations++;
     }
 
     private List<Candidate<R>> evaluateAndRankIndividuals(List<R> individuals) {
