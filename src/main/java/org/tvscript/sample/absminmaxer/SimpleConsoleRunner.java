@@ -13,7 +13,7 @@ public class SimpleConsoleRunner<C extends Representation> {
         this.geneticAlgorithm = geneticAlgorithm;
     }
 
-    public void run(){
+    public void run() {
         geneticAlgorithm.generateInitialPopulation();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int gens;
@@ -21,7 +21,7 @@ public class SimpleConsoleRunner<C extends Representation> {
             System.out.println("Number of generations to advance:");
             try {
                 gens = Integer.parseInt(reader.readLine());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Invalid input - value should be integer; if negative or 0, the program stops");
                 continue;
             }
@@ -31,6 +31,7 @@ public class SimpleConsoleRunner<C extends Representation> {
             for (int i = 0; i < gens; i++) {
                 geneticAlgorithm.advanceToNextGeneration();
             }
+            System.out.println("Generation number " + geneticAlgorithm.getNrGenerations());
             System.out.println("Best 5 solutions:");
             geneticAlgorithm.getPopulation().stream()
                     .limit(5).forEach(System.out::println);
