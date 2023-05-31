@@ -29,12 +29,12 @@ public class TournamentSelector implements Selector {
     }
 
     @Override
-    public <R extends Representation> List<Candidate<R>> select(List<Candidate<R>> population) {
+    public <R extends Representation> List<Candidate<R>> select(List<Candidate<R>> candidates) {
         Set<Integer> selectedIndices = new HashSet<>();
         for (int i = 0; i < amountToSelect; i++) {
             Set<Integer> tournamentIndices = new HashSet<>();
             while (tournamentIndices.size() != tournamentSize) {
-                Integer generatedIndex = random.nextInt(0, population.size());
+                Integer generatedIndex = random.nextInt(0, candidates.size());
                 if (!selectedIndices.contains(generatedIndex)) {
                     tournamentIndices.add(generatedIndex);
                 }
@@ -50,6 +50,6 @@ public class TournamentSelector implements Selector {
             selectedIndices.add(tournamentIndices.stream().sorted().toList().get(winnerIndex));
         }
 
-        return selectedIndices.stream().map(population::get).toList();
+        return selectedIndices.stream().map(candidates::get).toList();
     }
 }
